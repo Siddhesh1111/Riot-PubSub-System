@@ -1,0 +1,14 @@
+{% extends 'base_for_home.html' %}
+
+{% block content %}
+        <h1>Hey {{user}}</h1>
+        <h2>Message : Your data will be published here</h2>
+        {% for item in data_ %}
+                
+                
+                <p id="{{item.player_name}}">Name:{{item.player_name}}<br>
+                  Link = {{item.link}}
+                </p>
+        {% endfor %}
+        
+{% endblock %}
