@@ -1,0 +1,111 @@
+version: "3.1"
+
+services:
+  client_1:
+    build: client_1_files
+    command: python -u client_1.py
+    ports:
+      - "8080:5000"
+    networks:
+      - first_try
+
+  central_broker_1:
+    build: central_broker_1_files
+    command: python -u central_broker_1.py
+    networks:
+      - first_try
+    
+  publisher_1:
+    build: publisher_1_files
+    command: python -u scraping_1_pub1.py
+    networks:
+      - first_try
+
+  client_2:
+    build: client_2_files
+    command: python -u client_2.py
+    ports:
+      - "8081:5002"
+    networks:
+      - first_try
+
+  central_broker_2:
+    build: central_broker_2_files
+    command: python -u central_broker_2.py
+    networks:
+      - first_try
+
+  publisher_2:
+    build: publisher_2_files
+    command: python -u scraping_2_pub2.py
+    networks:
+      - first_try
+
+  client_3:
+    build: client_3_files
+    command: python -u client_3.py
+    ports:
+      - "8082:5004"
+    networks:
+      - first_try
+
+  central_broker_3:
+    build: central_broker_3_files
+    command: python -u central_broker_3.py
+    networks:
+      - first_try
+
+  publisher_3:
+    build: publisher_3_files
+    command: python -u scraping_3_pub3.py
+    networks:
+      - first_try
+  
+  mongodb2:
+    image: mongo:5.0
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - first_try
+
+
+networks:
+  first_try:
+    driver: bridge
+
+# version: "3.2"
+
+# services:
+#   client_2:
+#     build: client_2_files
+#     command: python -u client_2.py
+#     ports:
+#       - "8081:5002"
+#     networks:
+#       - second_try
+
+#   central_broker_2:
+#     build: central_broker_2_files
+#     command: python -u central_broker_2.py
+#     networks:
+#       - second_try
+    
+#   publisher_2:
+#     build: publisher_2_files
+#     command: python -u scraping_2_pub2.py
+#     networks:
+#       - second_try
+  
+#   mongodb3:
+#     image: mongo:5.0
+#     environment: 
+#       - MONGO_INITDB_ROOT_USERNAME=user
+#       - MONGO_INITDB_ROOT_PASSWORD=password
+#     networks:
+#       - second_try
+
+
+# networks:
+#   second_try:
+#     driver: bridge

@@ -1,0 +1,25 @@
+{% extends 'base_for_home.html' %}
+
+{% block content %}
+        <h1>Hey {{user}}</h1>
+        <h2>Message : Your data will be published here</h2>
+
+
+        {% for item_out in data_ %}
+
+            {% if item_out.topic_id not in dup %}
+                <div id="{{item_out.topic_id}}">
+                    {% for item in data_ %}
+                            {% if item_out.topic_id == item.topic_id %}
+                                <p id="{{item.id}}">
+                                    Name:{{item.player_name}}<br>
+                                    Link:{{item.link}}
+                                </p>
+                                {% do dup.append(item.topic_id) %}
+                            {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+{% endblock %}
