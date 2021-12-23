@@ -1,0 +1,139 @@
+version: '3'
+services:
+
+  
+
+  zookeeper:
+    image: "confluentinc/cp-zookeeper:5.2.1"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  mongodb2:
+    image: mongo:5.0
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    
+
+
+  kafka0:
+    image: "confluentinc/cp-enterprise-kafka:5.2.1"
+    ports:
+      - '9092:9092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: A://kafka0:29092,B://kafka0:9092
+      KAFKA_ADVERTISED_LISTENERS: A://kafka0:29092,B://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: A:PLAINTEXT,B:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: A
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      KAFKA_NUM_PARTITIONS: 3
+      
+
+  kafka1:
+    image: "confluentinc/cp-enterprise-kafka:5.2.1"
+    ports:
+      - '9093:9092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: A://kafka1:19092,B://kafka1:9092
+      KAFKA_ADVERTISED_LISTENERS: A://kafka1:19092,B://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: A:PLAINTEXT,B:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: A
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      KAFKA_NUM_PARTITIONS: 3
+      
+
+  kafka2:
+    image: "confluentinc/cp-enterprise-kafka:5.2.1"
+    ports:
+      - '9094:9092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: A://kafka2:8081,B://kafka2:9092
+      KAFKA_ADVERTISED_LISTENERS: A://kafka2:8081,B://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: A:PLAINTEXT,B:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: A
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      KAFKA_NUM_PARTITIONS: 3
+
+
+  read_old_data:
+    build: read_old_data
+    command: python -u read_old_data.py
+
+  consumer_1:
+    build: consumer_line_1
+    command: python -u consumer_final.py
+    depends_on: 
+      - kafka0
+      - mongodb2
+
+  consumer_2:
+    build: consumer_line_2
+    command: python -u consumer_final.py
+    depends_on: 
+      - kafka1
+      - mongodb2
+
+  consumer_3:
+    build: consumer_line_3
+    command: python -u consumer_final.py
+    depends_on: 
+      - kafka2
+      - mongodb2
+
+
+  client:
+    build: client_file
+    command: python -u client_final.py
+    ports:
+      - '9095:5000'
+    depends_on: 
+      - consumer_1
+      - mongodb2
+      - read_old_data
+
+  producer_1:
+    build: producer_line_1
+    command: python -u producer_final.py
+    depends_on: 
+      - kafka0
+      - mongodb2
+
+  producer_2:
+    build: producer_line_2
+    command: python -u producer_final.py
+    depends_on: 
+      - kafka1
+      - mongodb2
+  
+  producer_3:
+    build: producer_line_3
+    command: python -u producer_final.py
+    depends_on: 
+      - kafka2
+      - mongodb2
+
+
+    
+
+    
+  
+  

@@ -1,0 +1,19 @@
+{% extends 'base_for_home.html' %}
+
+{% block content %}
+  <h1> TOPICS : [SEN Tenz , TSM FTX WARDELL, 100T Asuna]</h1>
+  <form action="/update_subs_func" method="post">
+    <p>Name:</p>
+    <p><input type="text"  name ="nm"/></p>
+    <p>Password:</p>
+    <p><input type="text"  name ="no"/></p>
+    <p>Player 1:</p>
+    <p><input type="text"  name ="topic_1"/></p>
+    <p>Player 2:</p>
+    <p><input type="text"  name ="topic_2"/></p>
+    <p>Player 3:</p>
+    <p><input type="text"  name ="topic_3"/></p>
+    <p><input type="submit"  value ="Unsubscribe!"/></p>
+    <!-- <p><input type="submit"  value ="Subscribe!"/></p> -->
+  </form> 
+{% endblock %}
